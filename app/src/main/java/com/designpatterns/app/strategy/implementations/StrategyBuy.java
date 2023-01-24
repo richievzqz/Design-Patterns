@@ -8,48 +8,48 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StrategyBuy implements Strategy<Map<String, Integer>, Order> {
+public class StrategyBuy implements Strategy {
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     public StrategyBuy() {
     }
 
     @Override
-    public Order executeOrder(Map<String, Integer> stock, Order order) throws IOException {
+    public void executeOrder(Map<String, Item> stock, Order order) throws IOException {
 
         List<Item> items = new ArrayList<>();
         do {
-            String itemChosen;
-            System.out.println("Please choose items to Buy");
-            stock.forEach((item, amount) -> {
-                System.out.println(item + " amount: " + amount);
+            System.out.println("Please choose items to Buy or choose");
+            stock.forEach((item, itemDetails) -> {
+                System.out.println(itemDetails);
             });
-            itemChosen = READER.readLine();
-            if (itemChosen.equals("checkout")) {
-                break;
-            }
-            System.out.println("Please select an amount");
-            Integer amount = Integer.valueOf(READER.readLine());
+
+            String itemChosen = READER.readLine();
 
             if (stock.containsKey(itemChosen.toLowerCase())) {
-                Integer amountOfItemInStock = stock.get(itemChosen);
+                Item item = stock.get(itemChosen);
+                Integer amountOfItemInStock = item.getAmount();
+
+                System.out.println("Please select an amount");
+                Integer amount = Integer.valueOf(READER.readLine());
+
                 if (amountOfItemInStock >= amount) {
-                    stock.replace(itemChosen, amountOfItemInStock - amount);
+                    item.setAmount(amountOfItemInStock - amount);
                 } else {
-                    System.out.println("NOT ENOUGH IN STOCK");
+                    System.out.println("Not enough in stock");
+
+                    continue;
                 }
-                items.add(new Item(itemChosen, amount));
+                items.add(new Item(itemChosen, amount * item.getPrice(), amount));
+            } else {
+                System.out.println("Item not currently in stock");
+                continue;
             }
             order.setItems(items);
             System.out.println("Is that all?");
-            if (READER.readLine().equalsIgnoreCase("yes")){
-                break;
-            }
-        } while (true);
-        return order;
+        } while (!READER.readLine().equalsIgnoreCase("yes"));
     }
 
 }

@@ -11,41 +11,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class StrategySell implements Strategy<Map<String, Integer>, Order> {
+public class StrategySell implements Strategy {
     private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     public StrategySell() {};
     @Override
-    public Order executeOrder(Map<String, Integer> stock, Order order) throws IOException {
+    public void executeOrder(Map<String, Item> stock, Order order) throws IOException {
         List<Item> items = new ArrayList<>();
         do {
             String itemChosen;
             System.out.println("What would you like to Sell");
 
             itemChosen = READER.readLine();
-            if (itemChosen == null) {
-                break;
-            }
+
             System.out.println("How many do you have?");
             try {
                 Integer amount = Integer.valueOf(READER.readLine());
+
                 if (stock.containsKey(itemChosen.toLowerCase())) {
-                    Integer newAmountInStock = stock.get(itemChosen) + amount;
-                    stock.replace(itemChosen, newAmountInStock);
+                    Item item = stock.get(itemChosen);
+                    item.setAmount(item.getAmount() + amount);
+                    items.add(new Item(itemChosen, item.getPrice() * amount, amount));
                 } else {
-                    stock.put(itemChosen, amount);
+                    System.out.println("How much per item?");
+                    Double pricePerItem = Double.valueOf(READER.readLine());
+                    stock.put(itemChosen, new Item(itemChosen, pricePerItem, amount));
+                    items.add(new Item(itemChosen, pricePerItem * amount, amount));
                 }
-                items.add(new Item(itemChosen, amount));
             } catch (NumberFormatException e) {
                 System.out.println("Not a number");
                 break;
             }
             order.setItems(items);
-
             System.out.println("Is that all?");
-            if (READER.readLine().equalsIgnoreCase("yes")){
-                break;
-            }
-        } while (true);
-        return order;
+        } while (!READER.readLine().equalsIgnoreCase("yes"));
     }
 }

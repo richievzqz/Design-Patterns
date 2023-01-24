@@ -23,20 +23,24 @@ public class Client {
     }
 
         public static void main(String[] args) throws IOException {
-            Order order = new Order();
-            System.out.println("Buy or Sell?");
-            String product = reader.readLine();
-            if (product.equals("buy")) {
-                order.setStrategy(new StrategyBuy());
-                order.setProduct("buy");
-            }
-            if (product.equals("sell")) {
-                order.setStrategy(new StrategySell());
-                order.setProduct("sell");
-            }
-            order.createOrder(stock);
-            System.out.println("Your Order");
-            System.out.println(order);
-            System.out.println("CURRENT STOCK = " + stock);
+            do {
+                Order order = new Order();
+                System.out.println("Buy or Sell?");
+                String product = reader.readLine();
+                if (product.equals("buy")) {
+                    order.setStrategy(new StrategyBuy());
+                    order.setProduct("buy");
+                }
+                if (product.equals("sell")) {
+                    order.setStrategy(new StrategySell());
+                    order.setProduct("sell");
+                }
+                order.createOrder(stock);
+                System.out.println("Your Order");
+                System.out.println(order);
+                System.out.println("CURRENT STOCK = " + stock);
+
+                System.out.println("Would you like to submit another order? Yes, No");
+            } while (!reader.readLine().equalsIgnoreCase("no"));
     }
 }
