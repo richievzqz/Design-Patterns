@@ -1,5 +1,5 @@
 package com.designpatterns.app.strategy.model;
 
-public record Item(String name, Integer amount) {
+public record Item(String name, Double Price, Integer amount) {
 
 }

@@ -1,12 +1,11 @@
 package com.designpatterns.app.strategy.model;
 
-import lombok.Builder;
+import com.designpatterns.app.strategy.interfaces.Strategy;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.print.DocFlavor;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,10 +17,11 @@ public class Order {
     private Integer orderId;
     private String product;
     private List<Item> items;
-
-    public Order(String product) {
+    private Strategy strategy;
+    public Order() {
         this.orderId = new Random().nextInt();
-        this.product = product;
     }
-
+    public void createOrder(Map<String, Item> stock) throws IOException {
+        strategy.executeOrder(stock, this);
+    }
 }
