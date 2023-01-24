@@ -3,6 +3,7 @@
  */
 package designpatterns;
 
+import com.designpatterns.app.App;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
